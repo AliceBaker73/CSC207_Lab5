@@ -2,6 +2,7 @@ package data_access;
 
 import entity.User;
 import entity.UserFactory;
+import use_case.clear_users.ClearUserDataAccessInterface;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
@@ -11,7 +12,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface {
+public class FileUserDataAccessObject implements SignupUserDataAccessInterface, LoginUserDataAccessInterface,
+        ClearUserDataAccessInterface {
 
     private final File csvFile;
 
@@ -58,10 +60,18 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface, 
         accounts.put(user.getName(), user);
         this.save();
     }
-
+    @Override
+    public void clear() {
+        accounts.clear();
+        save();
+    }
     @Override
     public User get(String username) {
         return accounts.get(username);
+    }
+
+    public String getAll() {
+        return String.join(", ", accounts.keySet());
     }
 
     private void save() {
